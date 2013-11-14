@@ -19,7 +19,7 @@
 #include <fstream> //for perror()
 #include <string> // string for c++
 #include <string.h> // for memset()/bzero() For C
-#include <sys/socket.h> //? what if in windows 
+#include <sys/socket.h> 
 #include <netinet/in.h> // for sockaddr_in, hotons
 #include <arpa/inet.h> // for inet_addr
 #include <netdb.h> //for gethostbyname(), gethostbyaddr()
