@@ -41,9 +41,12 @@ Alternatively, you can set your preferred values for the available parameters by
 A case study: download the stock price of TENCENT HOLDINGS LTD (TCTZF). The quandlcode is GOOG/PINK_TCTZF. Then you might write the following code:
 
     //#include "quandl (windows).h"
-    quandl ql;
-    ql.auth("<code>"); // Replace <code> with your own token.
-    ql.get("GOOG/PINK_TCEHY");
+    int main() {
+        quandl ql;
+        ql.auth("<code>"); // Replace <code> with your own token.
+        ql.get("GOOG/PINK_TCEHY");
+        return 0;
+    }
     
     
 Please visit http://www.quandl.com/help/api to better understand the Quandl API design.
