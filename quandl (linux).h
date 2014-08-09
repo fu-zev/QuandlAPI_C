@@ -33,7 +33,7 @@ class quandl {
 		quandl(){};
 		~quandl(){};
 		// To store the token in "AuthCode", which is a public variable in the class.
-		void quandl::auth(string code){
+		void auth(string code){
 			AuthCode = code;
 		}
 
