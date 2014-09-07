@@ -1,7 +1,7 @@
 /*
  * quandl.h
  *
- *  Created on: 14/11/2013 (Updated on 08/06/2014)
+ *  Created on: 14/11/2013 (Updated on 07/09/2014)
  *      Author: Zhiwei Fu
  */
 
@@ -196,7 +196,7 @@ class quandl {
 			}
 
 			// To send the request.
-			request += website + " \r\n";
+			request += website + "\r\n";
 			//write(sockfd,request.c_str(),request.length());
 			send(sockfd, request.c_str(), request.length(), 0);
 
