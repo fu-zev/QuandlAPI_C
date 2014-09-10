@@ -1,7 +1,7 @@
 /*
  * quandl.h
  *
- *  Created on: 30/09/2013 (Updated on 07/09/2014)
+ *  Created on: 30/09/2013 (Updated on 10/09/2014)
  *      Author: Zhiwei Fu
  */
 
@@ -86,9 +86,9 @@ class quandl {
 			string website = "http://www.quandl.com/api/v1/datasets/" + code 
 				+ "." + type + "?sort_order=" + order;
 			if(AuthCode.length() == 0){
-				cout << "It would appear you are\'nt using an authentication"
-				  << " token. Please visit http://www.quandl.com/help/c++"
-				  << " or your usage may be limited.\n";
+				cout << "It appear you are\'nt using an authentication"
+				  << " token. Please visit http://www.quandl.com/help/api for getting one"
+				  << " ; otherwise your usage may be limited.\n";
 			}
 			else{
 				website += "&auth_token=" + AuthCode;
@@ -192,7 +192,8 @@ class quandl {
 			}
 
 			// To send the request.
-			request += website + "\r\n";
+			request += website + " HTTP/1.1\r\nHost: "
+				+ host + "\r\nConnection: close\r\n\r\n";
 			//write(sockfd,request.c_str(),request.length());
 			send(sockfd, request.c_str(), request.length(), 0);
 
@@ -206,11 +207,29 @@ class quandl {
 			// To read dataflow for the file.
 			memset(&message, 0, iMessage);
 			int iRecv = 1; iStart = 1;
-			string TempStr;
+			//string TempStr;
 			char tChar[1];
+			int nLoop = 0;
 			while (iRecv != 0 && iRecv != -1){
+				nLoop++;
 				iRecv = recv(sockfd, message, iMessage, MSG_WAITALL);
-				fid.write(message, iRecv);
+				if (nLoop == 1) {
+					string TempStr;
+					TempStr = string(message);
+					string::size_type iStart = TempStr.find("\r\n\r\n");
+					if (iStart < iRecv - 4) {
+						int nLenth = iRecv;
+						TempStr = TempStr.substr(iStart + 4, nLenth - (iStart + 4));
+						nLenth = TempStr.length();
+						fid.write(TempStr.c_str(), nLenth);
+					}
+					else {
+						fid.write(message, iRecv);
+					}
+				}
+				else {
+					fid.write(message, iRecv);
+				}
 			}
 
 				// To close the downloaded file
