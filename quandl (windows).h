@@ -48,8 +48,8 @@ class quandl {
 				+ "." + type + "?sort_order=" + order;
 			if(AuthCode.length() == 0){
 				cout << "It would appear you are\'nt using an authentication"
-				  << " token. Please visit http://www.quandl.com/help/c++"
-				  << " or your usage may be limited.\n";
+				  << " token. Please visit http://www.quandl.com/help/api for getting one"
+				  << "; otherwise your usage may be limited.\n";
 			}
 			else{
 				website += "&auth_token=" + AuthCode;
