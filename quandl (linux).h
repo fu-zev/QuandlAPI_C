@@ -1,8 +1,9 @@
 /*
  * quandl.h
  *
- *  Created on: 30/09/2013 (Updated on 10/09/2014)
+ *  Created on: 30/09/2013 (Updated on 06/10/2014)
  *      Author: Zhiwei Fu
+ *      Author: Kevin Pietsch
  */
 
 /* This programme is free software. It is developed by Dr Zhiwei Fu as a product
