@@ -44,11 +44,11 @@ class quandl {
 			string order = "asc"; 
 			string type = "csv";
 
-			string website = "http://www.quandl.com/api/v1/datasets/" + code 
+			string website = "https://www.quandl.com/api/v1/datasets/" + code 
 				+ "." + type + "?sort_order=" + order;
 			if(AuthCode.length() == 0){
 				cout << "It would appear you are\'nt using an authentication"
-				  << " token. Please visit http://www.quandl.com/help/api for getting one"
+				  << " token. Please visit https://www.quandl.com/account for getting one"
 				  << "; otherwise your usage may be limited.\n";
 			}
 			else{
@@ -80,11 +80,11 @@ class quandl {
 		void get(string code, string order, string StartDate, string EndDate,
 			string transformation, string collapse, string rows, string type){
 
-			string website = "http://www.quandl.com/api/v1/datasets/" + code 
+			string website = "https://www.quandl.com/api/v1/datasets/" + code 
 				+ "." + type + "?sort_order=" + order;
 			if(AuthCode.length() == 0){
 				cout << "It would appear you are\'nt using an authentication"
-				  << " token. Please visit http://www.quandl.com/help/c++"
+				  << " token. Please visit https://www.quandl.com/account"
 				  << " or your usage may be limited.\n";
 			}
 			else{
