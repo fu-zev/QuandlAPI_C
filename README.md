@@ -3,14 +3,19 @@
 I modified the Zafuer code in order to obtain a cross platform version + ssl compliant (https).
 Please take note that in the current version the quandl certificate is not checked.
 
-Recommended reading : the following post if you are not familiar with ssl/boost :
+Recommended reading : the following post if you are not familiar with ssl:
+
+ http://h71000.www7.hp.com/doc/83final/ba554_90007/ch04s03.html
  
 Compilation Info :
 
 You 'll need to link the project with boost asio and openssl libs. Both need to be build before to be linked.
 
-Info : Boost asio : http://www.boost.org/doc/libs/1_58_0/doc/html/boost_asio.html
-       Open ssl : http://developer.covenanteyes.com/building-openssl-for-visual-studio/  ( good post)
+Info : 
+
+ Boost asio : http://www.boost.org/doc/libs/1_58_0/doc/html/boost_asio.html
+
+ Open ssl : http://developer.covenanteyes.com/building-openssl-for-visual-studio/  ( good post)
 
 QuandlAPI_C
 ===========
