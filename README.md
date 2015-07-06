@@ -1,17 +1,29 @@
+
+
+I modified the Zafuer code in order to obtain a cross platform version + ssl compliant (https).
+Please take note that in the current version the quandl certificate is not checked.
+
+Recommended reading : the following post if you are not familiar with ssl/boost :
+ 
+Compilation Info :
+
+You 'll need to link the project with boost asio and openssl libs. Both need to be build before to be linked.
+
+Info : Boost asio : http://www.boost.org/doc/libs/1_58_0/doc/html/boost_asio.html
+       Open ssl : http://developer.covenanteyes.com/building-openssl-for-visual-studio/  ( good post)
+
 QuandlAPI_C
 ===========
 
 Quandl API (C/C++) is developed to download numeric data from quandl.com, making it easy for those C/C++ developers.
 
-The API is encapsulated within a header file: 1) quandl (windows).h for the Windows environment; or 2) quandl (linux).h for the Linux environment.
+The API is encapsulated within a header file: 1) quandl.h for the Windows and the Linux environment.
 
 It is reccommended that users sign up on http://www.quandl.com/users/sign_up, to obtain an authentication token for downloading increased volume of data per day.
 
 1.After downloading the right header file, please include it in your code by:
 
-    //The name by default is quandl (windows).h / quandl (linux).h. 
-    //You can change it to quandl.h as follows if you like.
-    //You might also put a full directory depending on the location of the header, e.g.: "#include "C:\Users\MyName\Desktop\API\quandl (windows).h"
+   
     #include "quandl.h"
 
 2.Now you can verify your account by by following command. This step can be skipped if you don't have an token or your don't want to use it.
@@ -40,7 +52,7 @@ Alternatively, you can set your preferred values for the available parameters by
     
 A case study: download the stock price of TENCENT HOLDINGS LTD (TCTZF). The quandlcode is GOOG/PINK_TCTZF. Then you might write the following code:
 
-    //#include "quandl (windows).h"
+    //#include "quandl.h"
     int main() {
         quandl ql;
         ql.auth("<code>"); // Replace <code> with your own token.
