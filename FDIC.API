@@ -1,0 +1,820 @@
+openapi: 3.0.0
+servers:(clientSocket.eConnect("127.0.0.1", 7497, U11443757, DU6795621)
+  - description: API to serve banking industry data to the public.
+    url: https://data.nasdaq.com/api/v3/datatables/NDLDA/TRADES/metadata?api_key=zDXmmhmPfdp4ukYzK69C
+info:
+  description: API to serve banking industry data to the public.
+  version: 0.1.0
+  title: FDIC Bank Data API (Beta)
+  contact:
+    email: PublicDataFeedback@fdic.gov
+tags:
+  - name: Structure
+    description: Financial institution demographic and location information
+  - name: History
+    description: List of structure change events
+  - name: Financials
+    description: Financial Information
+  - name: Historical
+    description: Historical data from 1934 onward regarding financial institutions.
+  - name: Failures
+    description: List of bank failures to date
+paths:https://meccaexpressinc-cautious-meme-7q67rrprxgphxq6x-7497.preview.app.github.dev/
+  /institutions:
+    get:             //Create a reader to consume messages from the TWS. The EReader will consume the incoming messages and put them in a queue
+            var reader = new EReader(clientSocket, readerSignal);
+            reader.Start(clientSocket.eConnect("127.0.0.1", 7497, U11443757, DU6795621);
+            //Once the messages are in the queue, an additional thread can be created to fetch them
+            new Thread(() => { while (clientSocket.IsConnected(https://data.nasdaq.com/api/v3/datatables/NDLDA/TRADES/metadata?api_key=zDXmmhmPfdp4ukYzK69C)) { readerSignal.waitForSignal((clientSocket.eConnect("127.0.0.1", 9001, U11443757, DU6795621)); reader.processMsgs((clientSocket.eConnect("127.0.0.1", 7497, U11443757, DU6795621)); } }) { IsBackground = true }.Start();
+
+      tags:
+        - Structure
+      summary: Get Financial Institutions
+      operationId: searchInstitutions
+      description: Returns a list of financial institutions.
+      parameters:
+        - in: query
+          name: filters
+          description: |
+            The filter for the bank search.
+            Examples:
+            * Filter by State name  
+            `STNAME:"West Virginia"`    
+            * Filter for any one of multiple State names  
+            `STNAME:("West Virginia","Delaware")`
+            * Filter all but a specified value  
+            `!(STNAME:"Virginia")`  
+            * Filter by last updated within an inclusive date range  
+            `DATEUPDT:["2010-01-01" TO "2010-12-31"]`
+            * Filter for deposits over 50,000,000 (50000 thousands of dollars)  
+            `DEP:[50000 TO *]`
+          required: false
+          example: >-
+            STALP:IA AND ACTIVE:1
+          schema:
+            type: string
+        - in: query
+          name: search
+          description: |
+            Flexible text search against institution records - currently only supporting name search. 
+            Search supports text search and fuzzy matching, as opposed to filters that are exact matches.
+            Examples:
+            * Search by name
+            `NAME: Island`
+            * Search by name (fuzzy match)
+            `NAME: Iland`
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: fields
+          description: Comma delimited list of fields to search.
+          required: false
+          example: >-
+            ZIP,OFFDOM,CITY,COUNTY,STNAME,STALP,NAME,ACTIVE,CERT,CBSA,ASSET,NETINC,DEP,DEPDOM,ROE,ROA,DATEUPDT,OFFICES
+          schema:
+            type: string
+        - in: query
+          name: sort_by
+          description: Field name by which to sort returned data
+          required: false
+          example: OFFICES
+          schema:
+            type: string
+            default: NAME
+        - in: query
+          name: sort_order
+          description: Indicator if ascending (ASC) or descending (DESC)
+          required: false
+          example: DESC
+          schema:
+            type: string
+            default: ASC
+        - in: query
+          name: limit
+          description: >-
+            The number of records to return. Default is 10 and maximum is 10,000.
+          required: false
+          example: 10
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 10000
+            default: 10
+        - in: query
+          name: offset
+          description: The offset of page to return.
+          required: false
+          example: 0
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - $ref: '#/components/parameters/fileFormat'
+        - $ref: '#/components/parameters/fileDownload'
+        - $ref: '#/components/parameters/fileName'
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/metadata'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/institution'
+            text/csv:
+              schema:
+                type: string
+                format: csv
+        '400':
+          description: bad input parameter
+  /locations:
+    get:
+      tags:
+        - Structure
+      summary: Get Institution Locations
+      operationId: searchLocations
+      description: Returns locations/branches of financial institutions.
+      parameters:
+        - in: query
+          name: filters
+          description: The filter for the location search.
+          examples:
+            statename:
+              value: STNAME:"West Virginia"
+              summary: Filter by state name
+            statenames:
+              value: STNAME:("West Virginia","Delaware")
+              summary: Filter by multiple State names
+            twofields:
+              value: STNAME:Oregon AND SERVTYPE:11
+              summary: Filter by two fields
+            daterange:
+              value: RUNDATE:["2015-01-01" TO "2015-01-06"]
+              summary: Filter by last updated within an inclusive date range
+            numberrange:
+              value: OFFNUM:[0 TO 10]
+              summary: Filter by Locations where the office number is between 0 and 10
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: fields
+          description: Comma delimited list of fields to return.
+          required: false
+          example: 'NAME,UNINUM,SERVTYPE,RUNDATE,CITY,STNAME,ZIP,COUNTY'
+          schema:
+            type: string
+        - in: query
+          name: sort_by
+          description: Field name by which to sort returned data
+          required: false
+          example: NAME
+          schema:
+            type: string
+            default: NAME
+        - in: query
+          name: sort_order
+          description: Indicator if ascending (ASC) or descending (DESC)
+          required: false
+          example: DESC
+          schema:
+            type: string
+            default: ASC
+        - in: query
+          name: limit
+          description: The number of records to return. Default is 10 and maximum is 10,000.
+          required: false
+          example: 10
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 10000
+            default: 10
+        - in: query
+          name: offset
+          description: The offset of page to return.
+          required: false
+          example: 0
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - $ref: '#/components/parameters/fileFormat'
+        - $ref: '#/components/parameters/fileDownload'
+        - $ref: '#/components/parameters/fileName'
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/metadata'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/location'
+            text/csv:
+              schema:
+                type: string
+                format: csv
+        '400':
+          description: bad input parameter
+  /summary:
+    get:
+      tags:
+        - Historical
+      summary: Get Historical Aggregate Data by Year
+      operationId: getHistorical
+      description: Returns aggregate financial and structure data, subtotaled by year, regarding finanical institutions.
+      parameters:
+        - in: query
+          name: filters
+          description: |
+            The filter criteria that refines the records included in the calculated result.
+            example: >-
+            STNAME:"Alabama" AND YEAR:2005
+            Examples:
+            * Filter by Community Banks (CB) vs. Savings Institutions (SI)  
+            `CB_SI:CB`  
+            * Filter by State name  
+            `STNAME:"Virginia"`    
+            * Filter all but a specified value  
+            `!(STNAME:"Virginia")`  
+            * Filter for any one of multiple State names  
+            `STNAME:("West Virginia","Delaware")`    
+            * Filter data by the year range  
+            `YEAR:["2015" TO "2017"]`
+          required: false
+          example: STNAME:"Alabama"
+          schema:
+            type: string
+        - in: query
+          name: fields
+          description: Comma delimited list of fields with aggregated annual financial data to return.
+          required: false
+          example: STNAME,YEAR,INTINC,EINTEXP,NIM,NONII,NONIX,ELNATR,ITAXR,IGLSEC,ITAX,EXTRA,NETINC
+          schema:
+            type: string
+        - in: query
+          name: sort_by
+          description: Field name by which to sort returned data
+          required: false
+          example: YEAR
+          schema:
+            type: string
+            default: YEAR
+        - in: query
+          name: sort_order
+          description: Indicator if ascending (ASC) or descending (DESC)
+          required: false
+          example: DESC
+          schema:
+            type: string
+            default: ASC
+        - in: query
+          name: limit
+          description: The number of records to return. Default is 10 and maximum is 10,000.
+          required: false
+          example: 10
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 10000
+            default: 10
+        - in: query
+          name: offset
+          description: The offset of page to return.
+          required: false
+          example: 0
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - in: query
+          name: agg_by
+          description: The field(s) by which data will be aggregated. Valid values are 'YEAR' or 'YEAR,STNAME'.
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: agg_term_fields
+          description: The field(s) for which aggregations will be counted for each unique term.
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: agg_sum_fields
+          description: The field(s) for which aggregations will be summed or aggregated.
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: agg_limit
+          description: The limit on how many aggregated results will be displayed
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 10000
+        - in: query
+          name: max_value
+          description: The field by which the max value is desired.
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: max_value_by
+          description: The field that will be used to determine unique records, similar to a primary key (i.e. CERT, )
+          required: false
+          schema:
+            type: string
+        - $ref: '#/components/parameters/fileFormat'
+        - $ref: '#/components/parameters/fileDownload'
+        - $ref: '#/components/parameters/fileName'
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/metadata'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/summary'
+            text/csv:
+              schema:
+                type: string
+                format: csv
+        '400':
+          description: bad input parameter
+  /failures:
+    get:
+      tags:
+        - Failures
+      summary: Get detail on historical bank failures from 1934 to present.
+      operationId: getFailures
+      description: Returns details on failed financial institutions.
+      parameters:
+        - in: query
+          name: filters
+          description: |
+            The filter criteria that refines the records returned. 
+            Examples:
+            * Filter by Location              
+            `CITYST:"MEMPHIS, TN"`  
+            * Filter all but a specified value  
+            `!(CITY:"PITTSBURGH")`  
+            * Filter by institution fail year range  
+            `FAILYR:["2015" TO "2016"]`
+          required: false
+          example: FAILYR:["2014" TO "2015"]
+          schema:
+            type: string
+        - in: query
+          name: fields
+          description: Comma delimited list of fields of failed financial institutions to return.
+          required: false
+          example: NAME,CERT,FIN,CITYST,FAILDATE,SAVR,RESTYPE,RESTYPE1,QBFDEP,QBFASSET,COST
+          schema:
+            type: string
+        - in: query
+          name: sort_by
+          description: Field name by which to sort returned data
+          required: false
+          example: FAILDATE
+          schema:
+            type: string
+            default: FAILDATE
+        - in: query
+          name: sort_order
+          description: Indicator if ascending (ASC) or descending (DESC)
+          required: false
+          example: DESC
+          schema:
+            type: string
+            default: ASC
+        - in: query
+          name: limit
+          description: The number of records to return. Default is 10 and maximum is 10,000.
+          required: false
+          example: 10
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 10000
+            default: 100
+        - in: query
+          name: offset
+          description: The offset of page to return.
+          required: false
+          example: 0
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - in: query
+          name: total_fields
+          description: Fields to sum up (in a totals response object). Only numeric columns are valid.
+          required: false
+          example: QBFDEP,QBFASSET,COST
+          schema:
+            type: string
+        - in: query
+          name: subtotal_by
+          description: The field by which data will be subtotaled (in totals response object). Only categorical values should be used.
+          required: false
+          example: RESTYPE
+          schema:
+            type: string
+        - in: query
+          name: agg_by
+          description: The field(s) by which data will be aggregated. Valid values are 'FAILYR' or 'FAILYR,PSTALP'.
+          required: false
+          example: FAILYR
+          schema:
+            type: string
+        - in: query
+          name: agg_term_fields
+          description: The field(s) for which aggregations will be counted for each unique term.
+          required: false
+          example: RESTYPE
+          schema:
+            type: string
+        - in: query
+          name: agg_sum_fields
+          description: The field(s) for which aggregations will be summed or aggregated.
+          required: false
+          example: QBFASSET,QBFDEP,COST
+          schema:
+            type: string
+        - in: query
+          name: agg_limit
+          description: The limit on how many aggregated results will be displayed
+          required: false
+          example: 10
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 10000
+            default: 10
+        - $ref: '#/components/parameters/fileFormat'
+        - $ref: '#/components/parameters/fileDownload'
+        - $ref: '#/components/parameters/fileName'
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/metadata'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/failure'
+                  totals:
+                    $ref: '#/components/schemas/totals'
+            text/csv:
+              schema:
+                type: string
+                format: csv
+        '400':
+          description: bad input parameter
+  /history:
+    get:
+      tags:
+        - History
+      summary: Get Detail on Structure Change Events
+      operationId: getHistory
+      description: Returns details on structure change events
+      parameters:
+        - in: query
+          name: filters
+          description: |
+            The filter criteria that refines the records returned. 
+            Examples:
+            * Filter by State
+            `STATE:"VIRGINIA"`  
+            * Filter all but a specified value  
+            `!(STATE:"VIRGINIA")`  
+            * Filter by Date Range
+            `PROCDATE:[2020-01-01 TO 2020-02-01]`
+          required: false
+          example: STATE:"VIRGINIA"
+          schema:
+            type: string
+        - in: query
+          name: search
+          description: |
+            Flexible text search against institution records
+            Search supports text search and fuzzy matching, as opposed to filters that are exact matches.
+            Examples:
+            * Search by Name
+            `NAME: Island`
+            * Search by Name (fuzzy match)
+            `NAME: Iland`
+            * Search by State
+            `STATE: VA`
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: fields
+          description: Comma delimited list of fields of failed financial institutions to return.
+          required: false
+          example: INSTNAME,CERT,PCITY,PSTALP,PZIP5
+          schema:
+            type: string
+        - in: query
+          name: sort_by
+          description: Field name by which to sort returned data
+          required: false
+          example: PROCDATE
+          schema:
+            type: string
+            default: PROCDATE
+        - in: query
+          name: sort_order
+          description: Indicator if ascending (ASC) or descending (DESC)
+          required: false
+          example: DESC
+          schema:
+            type: string
+            default: ASC
+        - in: query
+          name: limit
+          description: The number of records to return. Default is 10 and maximum is 10,000.
+          required: false
+          example: 10
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 10000
+            default: 100
+        - in: query
+          name: offset
+          description: The offset of page to return.
+          required: false
+          example: 0
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - in: query
+          name: agg_by
+          description: The field(s) by which data will be aggregated
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: agg_term_fields
+          description: The field(s) for which aggregations will be counted for each unique term.
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: agg_limit
+          description: The limit on how many aggregated results will be displayed
+          required: false
+          example: 10
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 10000
+            default: 10
+        - $ref: '#/components/parameters/fileFormat'
+        - $ref: '#/components/parameters/fileDownload'
+        - $ref: '#/components/parameters/fileName'
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/metadata'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/history'
+                  totals:
+                    $ref: '#/components/schemas/totals'
+            text/csv:
+              schema:
+                type: string
+                format: csv
+        '400':
+          description: bad input parameter
+  /financials:
+    get:
+      tags:
+        - Financials
+      summary: Get Financial Information for FDIC Insured Institutions
+      operationId: getFinancials
+      description: Returns financial information for financial institutions
+      parameters:
+        - in: query
+          name: filters
+          description: |
+            The filter criteria that refines the records included in the result.
+            Examples:  
+            * Filter data by the numeric range  
+            `ASSET:[1000 TO 9999]`
+          required: false
+          example: CERT:14
+          schema:
+            type: string
+        - in: query
+          name: fields
+          description: Comma delimited list of fields with quarterly financial data to return.
+          required: false
+          example: CERT,REPDTE,ASSET,DEP
+          schema:
+            type: string
+        - in: query
+          name: sort_by
+          description: Field name by which to sort returned data
+          required: false
+          example: REPDTE
+          schema:
+            type: string
+            default: REPDTE
+        - in: query
+          name: sort_order
+          description: Indicator if ascending (ASC) or descending (DESC)
+          required: false
+          example: DESC
+          schema:
+            type: string
+            default: ASC
+        - in: query
+          name: limit
+          description: The number of records to return. Default is 10 and maximum is 10,000. However, if the fields parameter is blank or the request is for more than 250 fields (variables), the maximum limit is 500 to ensure the request is successful.
+          required: false
+          example: 10
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 10000
+            default: 10
+        - in: query
+          name: offset
+          description: The offset of page to return.
+          required: false
+          example: 0
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - in: query
+          name: agg_by
+          description: The field(s) by which data will be aggregated.
+          required: false
+          example: CERT
+          schema:
+            type: string
+        - in: query
+          name: agg_term_fields
+          description: The field(s) for which aggregations will be counted for each unique term.
+          required: false
+          example: REPDTE
+          schema:
+            type: string
+        - in: query
+          name: agg_sum_fields
+          description: The field(s) for which aggregations will be summed or aggregated.
+          required: false
+          example: ASSET
+          schema:
+            type: string
+        - in: query
+          name: agg_limit
+          description: The limit on how many aggregated results will be displayed
+          required: false
+          example: 1
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 10000
+        - $ref: '#/components/parameters/fileFormat'
+        - $ref: '#/components/parameters/fileDownload'
+        - $ref: '#/components/parameters/fileName'
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/metadata'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/financial'
+                  totals:
+                    $ref: '#/components/schemas/totals'
+            text/csv:
+              schema:
+                type: string
+                format: csv
+        '400':
+          description: bad input parameter
+components:
+  parameters:
+    fileFormat:
+      in: query
+      name: format
+      description: The format of the data to return.
+      required: false
+      example: json
+      schema:
+        type: string
+        enum:
+          - json
+          - csv
+    fileDownload:
+      in: query
+      name: download
+      description: Whether the data should be downloaded as a file.
+      required: false
+      example: false
+      schema:
+        type: boolean
+        enum:
+          - false
+          - true
+    fileName:
+      in: query
+      name: filename
+      description: The filename to use when downloading data.
+      required: false
+      example: data_file
+      schema:
+        type: string
+  schemas:
+    institution:
+      type: object
+      allOf:
+        - $ref: 'institution_properties.yaml'
+    location:
+      type: object
+      allOf:
+        - $ref: 'location_properties.yaml'
+    summary:
+      type: object
+      allOf:
+        - $ref: 'summary_properties.yaml'
+    failure:
+      type: object
+      allOf:
+        - $ref: 'failure_properties.yaml'
+    history:
+      type: object
+      allOf:
+        - $ref: 'history_properties.yaml'
+    financial:
+      type: object
+      allOf:
+        - $ref: 'risview_properties.yaml'
+    metadata:
+      type: object
+      properties:
+        total:
+          type: integer
+          description: Total query result count
+        parameters:
+          type: object
+          description: Query parameters supplied
+        index:
+          type: object
+          properties:
+            name:
+              type: string
+              description: name of index used to retrieve data
+            createTimestamp:
+              type: string
+              format: date-time
+              description: date/time index was created
+    totals:
+      type: object
+      description: Total and subtotal data (additional properties based on fields selected)
+      properties:
+        count:
+          type: integer
+          description: Total result count
